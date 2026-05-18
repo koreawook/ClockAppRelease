@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; connect-src https://api.github.com https://api.counterapi.dev; frame-ancestors 'none';">
+    <title>ClockApp · 통계</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #0d1117;
+            color: #e6edf3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .container { width: 100%; max-width: 600px; }
+        h1 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .card {
+            background: #161b22;
+            border: 1px solid #21262d;
+            border-radius: 12px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+        }
+        .card .label {
+            font-size: 0.78rem;
+            color: #8b949e;
+            margin-bottom: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .card .value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #58a6ff;
+            line-height: 1;
+        }
+        .card .sub {
+            font-size: 0.72rem;
+            color: #484f58;
+            margin-top: 0.4rem;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.78rem;
+            color: #484f58;
+        }
+        .footer a { color: #58a6ff; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+        .updated {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #484f58;
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 480px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>ClockApp 통계</h1>
+    <div class="grid">
+        <div class="card">
+            <div class="label">고유 방문자</div>
+            <div class="value" id="val-unique">–</div>
+            <div class="sub">브라우저 기준</div>
+        </div>
+        <div class="card">
+            <div class="label">페이지 조회</div>
+            <div class="value" id="val-views">–</div>
+            <div class="sub">누적 열람 수</div>
+        </div>
+        <div class="card">
+            <div class="label">다운로드</div>
+            <div class="value" id="val-dl">–</div>
+            <div class="sub">GitHub 전체</div>
+        </div>
+    </div>
+    <div class="updated" id="updated"></div>
+    <div class="footer"><a href="index.html">← 홈으로</a></div>
+</div>
+
+<script>
+    const NS = 'koreawook-clockapp';
+    const CA = 'https://api.counterapi.dev/v1';
+
+    function fmt(n) {
+        return typeof n === 'number' ? n.toLocaleString('ko-KR') : '–';
+    }
+
+    Promise.all([
+        fetch(`${CA}/${NS}/unique`).then(r => r.json()).catch(() => null),
+        fetch(`${CA}/${NS}/pageviews`).then(r => r.json()).catch(() => null),
+        fetch('https://api.github.com/repos/koreawook/ClockAppRelease/releases?per_page=10', {
+            headers: { 'Accept': 'application/vnd.github.v3+json' }
+        }).then(r => r.json()).catch(() => null)
+    ]).then(([unique, views, releases]) => {
+        document.getElementById('val-unique').textContent = fmt(unique?.count);
+        document.getElementById('val-views').textContent = fmt(views?.count);
+
+        if (releases && Array.isArray(releases)) {
+            const total = releases.reduce((sum, rel) => {
+                return sum + (rel.assets || []).reduce((s, a) => s + (a.download_count || 0), 0);
+            }, 0);
+            document.getElementById('val-dl').textContent = fmt(total);
+        }
+
+        const now = new Date();
+        document.getElementById('updated').textContent =
+            `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')} 기준`;
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; connect-src https://api.github.com https://api.counterapi.dev; frame-ancestors 'none';">
+    <title>ClockApp - 자세 알림 앱</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #0d1117;
+            color: #e6edf3;
+            line-height: 1.6;
+        }
+
+        /* 헤더 */
+        header {
+            padding: 1.2rem 2rem;
+            border-bottom: 1px solid #21262d;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        .logo { font-size: 1.1rem; font-weight: 600; color: #58a6ff; }
+        .version { font-size: 0.85rem; color: #8b949e; }
+
+        /* 히어로 */
+        .hero {
+            text-align: center;
+            padding: 5rem 2rem 3rem;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        .hero-icon {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 1.5rem;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        .hero-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .hero .tagline {
+            font-size: 1.1rem;
+            color: #8b949e;
+            margin-bottom: 2rem;
+        }
+        .btn-download {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            background: #238636;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background 0.2s;
+            line-height: 1.3;
+        }
+        .btn-download:hover { background: #2ea043; }
+        .btn-download .btn-ver {
+            font-size: 0.75rem;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+        .meta {
+            margin-top: 0.75rem;
+            font-size: 0.82rem;
+            color: #8b949e;
+        }
+
+        /* 스트레칭 이미지 갤러리 */
+        .gallery {
+            max-width: 960px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+        .gallery h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #8b949e;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.85rem;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        .gallery-item {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #21262d;
+            background: #f5f0e8;
+            transition: border-color 0.2s;
+        }
+        .gallery-item:hover { border-color: #58a6ff; }
+        .gallery-item img {
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* 기능 */
+        .features {
+            max-width: 960px;
+            margin: 0 auto 5rem;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .feature {
+            background: #161b22;
+            border: 1px solid #21262d;
+            border-radius: 10px;
+            padding: 1.25rem;
+        }
+        .feature h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .feature p { font-size: 0.82rem; color: #8b949e; }
+
+        /* 푸터 */
+        footer {
+            border-top: 1px solid #21262d;
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.82rem;
+            color: #8b949e;
+        }
+        footer a { color: #58a6ff; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        /* 주의사항 */
+        .notice {
+            border-top: 1px solid #21262d;
+            padding: 3rem 2rem;
+        }
+        .notice-inner {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        .notice h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+        }
+        .notice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .notice-item {
+            background: #161b22;
+            border: 1px solid #21262d;
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+        .notice-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        .notice-item h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            color: #e6edf3;
+        }
+        .notice-item p {
+            font-size: 0.82rem;
+            color: #8b949e;
+            margin-bottom: 0.75rem;
+        }
+        .notice-item ol {
+            padding-left: 1.2rem;
+            font-size: 0.82rem;
+            color: #8b949e;
+        }
+        .notice-item ol li { margin-bottom: 0.3rem; }
+        .notice-item strong { color: #e6edf3; }
+        .notice-footer {
+            font-size: 0.82rem;
+            color: #8b949e;
+            text-align: center;
+        }
+        .notice-footer a { color: #58a6ff; text-decoration: none; }
+        .notice-footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .gallery-grid .gallery-item:last-child { display: none; }
+            .notice-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="logo">ClockApp</span>
+    <span class="version" id="ver">v2.1.0</span>
+</header>
+
+<div class="hero">
+    <div class="hero-icon">
+        <img src="clock_app_preview_512.png" alt="ClockApp 아이콘">
+    </div>
+    <h1>ClockApp</h1>
+    <p class="tagline">거북목 예방을 위한 자세 알림 앱 · Windows 무료</p>
+    <a id="btn-download" href="https://github.com/koreawook/ClockAppRelease/releases/latest" class="btn-download">최신 버전 다운로드<span class="btn-ver" id="btn-ver"></span></a>
+    <p class="meta" id="prev-version" style="margin-top:0.4rem"></p>
+</div>
+
+<div class="gallery">
+    <h2>스트레칭 가이드 미리보기</h2>
+    <div class="gallery-grid">
+        <div class="gallery-item">
+            <img src="stretchimage/거북목001.png" alt="거북목 교정">
+        </div>
+        <div class="gallery-item">
+            <img src="stretchimage/neckstretch-001.png" alt="목 스트레칭">
+        </div>
+        <div class="gallery-item">
+            <img src="stretchimage/shoulderroll.png" alt="어깨 돌리기">
+        </div>
+    </div>
+</div>
+
+<div class="features">
+    <div class="feature">
+        <h3>🔔 자세 알림</h3>
+        <p>설정한 간격마다 자세 교정 팝업으로 거북목을 예방합니다.</p>
+    </div>
+    <div class="feature">
+        <h3>🧘 스트레칭 가이드</h3>
+        <p>휴식 시간마다 목·어깨 스트레칭 동작을 안내합니다.</p>
+    </div>
+    <div class="feature">
+        <h3>🍱 식사 알림</h3>
+        <p>점심·저녁 시간을 설정해 식사 알림을 받을 수 있습니다.</p>
+    </div>
+</div>
+
+<div class="notice">
+    <div class="notice-inner">
+        <h2>설치 시 주의사항</h2>
+        <div class="notice-grid">
+            <div class="notice-item">
+                <div class="notice-icon">⚠️</div>
+                <h3>"일반적으로 다운로드되지 않습니다" 경고</h3>
+                <p>브라우저에서 다운로드 시 위와 같은 경고가 표시될 수 있습니다.<br>
+                이는 배포 초기 앱에서 흔히 나타나는 현상으로, 악성 소프트웨어가 아닙니다.</p>
+                <ol>
+                    <li>다운로드 바의 <strong>⋯ (점 세 개)</strong> 클릭</li>
+                    <li><strong>유지</strong> 선택</li>
+                    <li>다시 <strong>계속</strong> 클릭</li>
+                </ol>
+            </div>
+            <div class="notice-item">
+                <div class="notice-icon">🛡️</div>
+                <h3>Windows Defender SmartScreen 경고</h3>
+                <p>설치 파일 실행 시 "Windows의 PC 보호" 화면이 나타날 수 있습니다.<br>
+                코드 서명 인증서가 없는 개인 개발 앱에서 나타나는 일반적인 현상입니다.</p>
+                <ol>
+                    <li>파란 화면 좌측 하단 <strong>추가 정보</strong> 클릭</li>
+                    <li><strong>실행</strong> 버튼 클릭</li>
+                </ol>
+            </div>
+        </div>
+        <p class="notice-footer">릴리즈 정보는 <a href="https://github.com/koreawook/ClockAppRelease">GitHub에서 확인</a>하실 수 있습니다.</p>
+    </div>
+</div>
+
+<footer>
+    <p>Made by <a href="https://github.com/koreawook">koreawook</a> &nbsp;·&nbsp;
+    <a href="https://github.com/koreawook/ClockAppRelease">GitHub</a> &nbsp;·&nbsp;
+    <a href="mailto:koreawook@gmail.com">koreawook@gmail.com</a></p>
+    <p style="margin-top:0.5rem">© 2025 koreawook. MIT License.</p>
+</footer>
+
+<script>
+    // 방문자 추적
+    const _NS = 'koreawook-clockapp';
+    const _CA = 'https://api.counterapi.dev/v1';
+    fetch(`${_CA}/${_NS}/pageviews/up`).catch(() => {});
+    if (!localStorage.getItem('_ca_visited')) {
+        localStorage.setItem('_ca_visited', '1');
+        fetch(`${_CA}/${_NS}/unique/up`).catch(() => {});
+    }
+    document.getElementById('btn-download').addEventListener('click', function() {
+        fetch(`${_CA}/${_NS}/downloads/up`).catch(() => {});
+    });
+
+    function safeGithubUrl(url) {
+        try {
+            const u = new URL(url);
+            return u.protocol === 'https:' && (u.hostname === 'github.com' || u.hostname.endsWith('.github.com')) ? url : null;
+        } catch { return null; }
+    }
+
+    fetch('https://api.github.com/repos/koreawook/ClockAppRelease/releases?per_page=2', {
+        headers: { 'Accept': 'application/vnd.github.v3+json' }
+    })
+    .then(r => r.json())
+    .then(releases => {
+        const latest = releases[0];
+        const prev = releases[1];
+
+        if (latest) {
+            const asset = latest.assets && latest.assets.find(a => a.name.endsWith('.exe'));
+            if (asset) {
+                const safeUrl = safeGithubUrl(asset.browser_download_url);
+                if (!safeUrl) return;
+                const btn = document.getElementById('btn-download');
+                const version = (latest.tag_name || '').replace(/[^0-9.]/g, '');
+                btn.href = safeUrl;
+                btn.download = asset.name.replace(/[^a-zA-Z0-9._\-]/g, '');
+                if (version) {
+                    document.getElementById('ver').textContent = 'v' + version;
+                    document.getElementById('btn-ver').textContent = 'v' + version;
+                }
+            }
+        }
+
+        if (prev) {
+            const prevAsset = prev.assets && prev.assets.find(a => a.name.endsWith('.exe'));
+            const prevTag = (prev.tag_name || '').replace(/[^0-9.]/g, '');
+            const prevEl = document.getElementById('prev-version');
+            if (prevAsset && prevTag) {
+                const safeUrl = safeGithubUrl(prevAsset.browser_download_url);
+                if (!safeUrl) return;
+                const a = document.createElement('a');
+                a.href = safeUrl;
+                a.textContent = 'v' + prevTag;
+                a.style.cssText = 'color:#58a6ff;text-decoration:none;';
+                a.addEventListener('mouseover', () => { a.style.textDecoration = 'underline'; });
+                a.addEventListener('mouseout', () => { a.style.textDecoration = 'none'; });
+                prevEl.textContent = '이전 버전: ';
+                prevEl.appendChild(a);
+            }
+        }
+    })
+    .catch(() => {});
+</script>
+
+</body>
+</html>
