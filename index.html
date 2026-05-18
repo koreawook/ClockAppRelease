@@ -223,7 +223,8 @@
     <h1>ClockApp</h1>
     <p class="tagline">거북목 예방을 위한 자세 알림 앱</p>
     <a id="btn-download" href="https://github.com/koreawook/ClockAppRelease/releases/latest" class="btn-download">최신 버전 다운로드<span class="btn-ver" id="btn-ver"></span></a>
-    <p class="meta" id="prev-version" style="margin-top:0.4rem"></p>
+    <p class="meta" style="margin-top:0.6rem"><a id="btn-apk" href="https://github.com/koreawook/ClockAppRelease/releases/latest" style="color:#8b949e;font-size:0.78rem;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">test apk (Android)</a></p>
+    <p class="meta" id="prev-version" style="margin-top:0.2rem"></p>
 </div>
 
 <div class="gallery">
@@ -331,6 +332,15 @@
                 if (version) {
                     document.getElementById('ver').textContent = 'v' + version;
                     document.getElementById('btn-ver').textContent = 'v' + version;
+                }
+            }
+            const apkAsset = latest.assets && latest.assets.find(a => a.name.endsWith('.apk'));
+            if (apkAsset) {
+                const safeApkUrl = safeGithubUrl(apkAsset.browser_download_url);
+                if (safeApkUrl) {
+                    const apkBtn = document.getElementById('btn-apk');
+                    apkBtn.href = safeApkUrl;
+                    apkBtn.download = apkAsset.name.replace(/[^a-zA-Z0-9._\-]/g, '');
                 }
             }
         }
