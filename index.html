@@ -228,6 +228,7 @@
     <p class="tagline">거북목 예방을 위한 자세 알림 앱</p>
     <a id="btn-download" href="https://github.com/koreawook/ClockAppRelease/releases/latest" class="btn-download">최신 버전 다운로드<span class="btn-ver" id="btn-ver"></span></a>
     <p class="meta" style="margin-top:0.6rem"><a id="btn-apk" href="https://github.com/koreawook/ClockAppRelease/releases/latest" style="color:#8b949e;font-size:0.78rem;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">test apk (Android)</a></p>
+    <p class="meta" style="margin-top:0.2rem"><a id="btn-ios" href="https://github.com/koreawook/ClockAppRelease/releases/latest" style="color:#8b949e;font-size:0.78rem;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">test ios (simulator)</a></p>
     <p class="meta" id="prev-version" style="margin-top:0.2rem"></p>
 </div>
 
@@ -345,6 +346,19 @@
                     const apkBtn = document.getElementById('btn-apk');
                     apkBtn.href = safeApkUrl;
                     apkBtn.download = apkAsset.name.replace(/[^a-zA-Z0-9._\-]/g, '');
+                }
+            }
+            const iosAsset = latest.assets && (
+                latest.assets.find(a => a.name.endsWith('.ipa')) ||
+                latest.assets.find(a => a.name.endsWith('.zip') && a.name.toLowerCase().includes('ios'))
+            );
+            if (iosAsset) {
+                const safeIosUrl = safeGithubUrl(iosAsset.browser_download_url);
+                if (safeIosUrl) {
+                    const iosBtn = document.getElementById('btn-ios');
+                    iosBtn.href = safeIosUrl;
+                    iosBtn.download = iosAsset.name.replace(/[^a-zA-Z0-9._\-]/g, '');
+                    iosBtn.textContent = iosAsset.name.endsWith('.ipa') ? 'test ios (TestFlight IPA)' : 'test ios (simulator)';
                 }
             }
         }
