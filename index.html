@@ -227,7 +227,7 @@
     <h1>ClockApp</h1>
     <p class="tagline">거북목 예방을 위한 자세 알림 앱</p>
     <a id="btn-download" href="https://github.com/koreawook/ClockAppRelease/releases/latest" class="btn-download">최신 버전 다운로드<span class="btn-ver" id="btn-ver"></span></a>
-    <p class="meta" id="row-apk" style="margin-top:0.6rem;display:none"><a id="btn-apk" href="#" style="color:#8b949e;font-size:0.78rem;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">test apk (Android)</a></p>
+    <p class="meta" id="row-apk" style="margin-top:0.6rem;display:none"><a id="btn-apk" href="#" style="color:#8b949e;font-size:0.78rem;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">test apk (Android)</a><span id="apk-date" style="color:#6e7681;font-size:0.7rem;margin-left:0.5rem"></span></p>
     <p class="meta" id="row-ios" style="margin-top:0.2rem;display:none"><a id="btn-ios" href="#" style="color:#8b949e;font-size:0.78rem;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">test ios (simulator)</a></p>
     <p class="meta" id="prev-version" style="margin-top:0.2rem"></p>
 </div>
@@ -347,6 +347,13 @@
                     apkBtn.href = safeApkUrl;
                     apkBtn.download = apkAsset.name.replace(/[^a-zA-Z0-9._\-]/g, '');
                     document.getElementById('row-apk').style.display = '';
+                    const uploadedAt = apkAsset.updated_at || apkAsset.created_at;
+                    if (uploadedAt) {
+                        const d = new Date(uploadedAt);
+                        const pad = n => String(n).padStart(2, '0');
+                        const dateStr = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+                        document.getElementById('apk-date').textContent = `(${dateStr})`;
+                    }
                 }
             }
             const iosAsset = latest.assets && (
